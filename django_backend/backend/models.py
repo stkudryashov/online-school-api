@@ -83,7 +83,7 @@ class User(AbstractUser):
         ('mentor', 'Ментор'),
     )
 
-    type = models.CharField(choices=USER_TYPE, max_length=5, default='student', verbose_name='Тип пользователя')
+    type = models.CharField(choices=USER_TYPE, max_length=16, default='student', verbose_name='Тип пользователя')
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
