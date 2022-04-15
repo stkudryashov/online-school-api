@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -131,6 +133,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.yandex.ru')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'email@yandex.ru')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'smtp_password')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', '465')
+
+EMAIL_USE_SSL = True
+SERVER_EMAIL = EMAIL_HOST_USER
 
 
 REST_FRAMEWORK = {
