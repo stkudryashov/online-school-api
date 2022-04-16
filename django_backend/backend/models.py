@@ -8,6 +8,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 from django_rest_passwordreset.tokens import get_token_generator
 
+from django.core.validators import RegexValidator
+
 
 class UserManager(BaseUserManager):
     """Миксин для управления пользователями"""
@@ -131,3 +133,21 @@ class ConfirmEmailToken(models.Model):
 
     def __str__(self):
         return "Password reset token for user {user}".format(user=self.user)
+
+
+class UserInfo(models.Model):
+
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
+    date_of_birth = models.DateField(verbose_name='Дата рождения')
+    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    phoneNumber = models.CharField(
+        validators=[phone_number_regex],
+        max_length=16,
+        unique=True,
+        verbose_name='Номер телефона'
+    )
+    city = models.CharField(max_length=30, verbose_name='Город')
+    about_me = models.TextField(verbose_name='Обо мне')
+
+
+
