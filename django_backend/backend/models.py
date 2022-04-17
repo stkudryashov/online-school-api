@@ -136,18 +136,25 @@ class ConfirmEmailToken(models.Model):
 
 
 class UserInfo(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='user_info')
 
-    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
-    date_of_birth = models.DateField(verbose_name='Дата рождения')
-    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    phoneNumber = models.CharField(
+    date_of_birth = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
+
+    phone_number_regex = RegexValidator(regex=r'^((\+7|7|8)+([0-9]){10})$')
+    phone_number = models.CharField(
         validators=[phone_number_regex],
         max_length=16,
         unique=True,
-        verbose_name='Номер телефона'
+        verbose_name='Номер телефона',
+        blank=True, null=True
     )
-    city = models.CharField(max_length=30, verbose_name='Город')
-    about_me = models.TextField(verbose_name='Обо мне')
 
+    city = models.CharField(blank=True, null=True, max_length=30, verbose_name='Город')
+    about_me = models.TextField(blank=True, null=True, verbose_name='Обо мне')
 
+    def __str__(self):
+        return f'{self.user.email}'
 
+    class Meta:
+        verbose_name = 'Информация о пользователе'
+        verbose_name_plural = 'Информация о пользователях'

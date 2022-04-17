@@ -1,14 +1,17 @@
 from django.http import JsonResponse
+from rest_framework.response import Response
 
 from rest_framework.views import APIView
 
 from django.contrib.auth.password_validation import validate_password
 
-from backend.serializers import UserSerializer
+from backend.serializers import UserSerializer, UserInfoSerializer
 
 from backend.signals import new_user_registered
 
-from backend.models import ConfirmEmailToken
+from backend.models import ConfirmEmailToken, UserInfo
+
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegisterAccount(APIView):
@@ -65,5 +68,33 @@ class ConfirmAccount(APIView):
                 return JsonResponse({'Status': True})
             else:
                 return JsonResponse({'Status': False, 'Errors': 'Неправильно указан токен или email'})
+
+        return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
+
+
+class AccountInfo(APIView):
+    """Класс для работы с информацией пользователей"""
+
+    permission_classes = [IsAuthenticated]
+
+    # Получить мою информацию о профиле
+    def get(self, request, *args, **kwargs):
+        user_info, _ = UserInfo.objects.get_or_create(user_id=request.user.id)
+        serializer = UserInfoSerializer(user_info)
+        return Response(serializer.data)
+
+    # Редактировать мою информацию о профиле
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        if {'phone_number'}.issubset(request.data):
+            user_info, _ = UserInfo.objects.get_or_create(user_id=request.user.id)
+
+            serializer = UserInfoSerializer(user_info, data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'Status': True})
+            else:
+                return JsonResponse({'Status': False, 'Errors': serializer.errors})
 
         return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
