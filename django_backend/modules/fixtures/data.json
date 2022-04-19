@@ -1,0 +1,106 @@
+[
+  {
+    "model": "modules.module",
+    "pk": 1,
+    "fields": {
+      "title": "Основы языка программирования",
+      "description": "Знакомство с языком, типы и структуры данных, классы и объекты, настройка окружения для разработки, работа с файловой системой, стандартная библиотека, обработка данных в любых форматах, написание собственного парсера."
+    }
+  },
+  {
+    "model": "modules.module",
+    "pk": 2,
+    "fields": {
+      "title": "Git — система контроля версий",
+      "description": "Git — инструмент, который поможет избежать типичных ошибок в работе программиста, его необходимо знать для перехода к профессиональной разработке ПО. После прохождения курса студенты начнут формировать портфолио на GitHub."
+    }
+  },
+  {
+    "model": "modules.module",
+    "pk": 3,
+    "fields": {
+      "title": "Django: создание приложений",
+      "description": "Изучим основные веб-технологии и узнаем о месте Django среди них. Научимся с нуля создавать и разворачивать несложные сайты, эффективно используя сильные стороны Django."
+    }
+  },
+  {
+    "model": "modules.module",
+    "pk": 4,
+    "fields": {
+      "title": "Английский для программистов",
+      "description": "Множество заказов на разработку программного обеспечения поступает к отечественным специалистам от иностранцев, и почти все заказчики предпочитают общаться на английском языке. Именно поэтому каждому IT-специалисту важно владеть языком на хорошем уровне. В этой статье мы расскажем, как английский поможет вам в работе и какие ресурсы нужно использовать программистам при изучении английского."
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 1,
+    "fields": {
+      "title": "Python. Знакомство с консолью",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 1,
+      "order_number": 1
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 2,
+    "fields": {
+      "title": "Условные конструкции",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 1,
+      "order_number": 2
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 3,
+    "fields": {
+      "title": "Введение в типы данных и циклы",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 1,
+      "order_number": 3
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 4,
+    "fields": {
+      "title": "Внедрение контроля версий",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 2,
+      "order_number": 1
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 5,
+    "fields": {
+      "title": "История работы и ветки",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 2,
+      "order_number": 2
+    }
+  },
+  {
+    "model": "modules.lesson",
+    "pk": 6,
+    "fields": {
+      "title": "Работа с ORM",
+      "description": "",
+      "document_url": "https://habr.com/ru/all/",
+      "homework_url": "https://habr.com/ru/all/",
+      "module": 3,
+      "order_number": 1
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "model": "classrooms.classroom",
+    "pk": 1,
+    "fields": {
+      "title": "PY-01",
+      "date_start": "2022-04-01",
+      "date_end": "2022-04-19",
+      "course": 1,
+      "mentor": 4
+    }
+  },
+  {
+    "model": "classrooms.classroom",
+    "pk": 2,
+    "fields": {
+      "title": "DJ-01",
+      "date_start": "2022-04-19",
+      "date_end": "2022-04-01",
+      "course": 2,
+      "mentor": 4
+    }
+  },
+  {
+    "model": "classrooms.studentclassroom",
+    "pk": 2,
+    "fields": {
+      "classroom": 1,
+      "student": 3,
+      "is_completed": false
+    }
+  },
+  {
+    "model": "classrooms.studentclassroom",
+    "pk": 3,
+    "fields": {
+      "classroom": 1,
+      "student": 2,
+      "is_completed": false
+    }
+  }
+]

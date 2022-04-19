@@ -1,0 +1,111 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$4wJK5MQsTlbH77dcnURNLT$sXHXXvHXqE6NOuxAVctBNvT3cD2iO1cC1VkKwPV6Yys=",
+      "last_login": "2022-04-19T13:10:35.135Z",
+      "is_superuser": true,
+      "first_name": "Super",
+      "last_name": "User",
+      "is_staff": true,
+      "date_joined": "2022-04-19T13:10:25.838Z",
+      "email": "admin@admin.com",
+      "username": "",
+      "is_active": true,
+      "type": "student",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$gQu80Fy5sLvfBFnx5iNrFC$ypNhFqmLzBKaKqCDdjj5GXZT9A8I8MGlhxAq0P0LnP0=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Иван",
+      "last_name": "Смирнов",
+      "is_staff": false,
+      "date_joined": "2022-04-19T13:11:22Z",
+      "email": "ivan@yandex.ru",
+      "username": "",
+      "is_active": true,
+      "type": "student",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$86W5zSpzsJkGMx2ZnygASS$QCSizMT8N2CTRJzciB2+cDRNDcvae/P1dAZhxV78qo0=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Гоша",
+      "last_name": "Иванов",
+      "is_staff": false,
+      "date_joined": "2022-04-19T13:13:06Z",
+      "email": "gosha@yandex.ru",
+      "username": "",
+      "is_active": true,
+      "type": "student",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$2iIYohMQO6jqnHdK7R5Udp$WA7nKq9fUAVPIokuTnd9XaL42ctPwiwZ5Lm2wBbcBcw=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Александр",
+      "last_name": "Никифоров",
+      "is_staff": false,
+      "date_joined": "2022-04-19T13:32:35Z",
+      "email": "aleks59niki30@gmail.com",
+      "username": "",
+      "is_active": true,
+      "type": "teacher",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.userinfo",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "date_of_birth": "1998-04-19",
+      "phone_number": "+79996502354",
+      "city": "Москва",
+      "about_me": ""
+    }
+  },
+  {
+    "model": "accounts.userinfo",
+    "pk": 2,
+    "fields": {
+      "user": 3,
+      "date_of_birth": "2000-04-12",
+      "phone_number": "+79092347654",
+      "city": "Санкт-Петербург",
+      "about_me": ""
+    }
+  },
+  {
+    "model": "accounts.userinfo",
+    "pk": 3,
+    "fields": {
+      "user": 4,
+      "date_of_birth": "1999-08-24",
+      "phone_number": "+79216302963",
+      "city": "Санкт-Петербург",
+      "about_me": null
+    }
+  }
+]
