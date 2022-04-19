@@ -1,15 +1,16 @@
 from django.http import JsonResponse
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
 
 from django.contrib.auth.password_validation import validate_password
 
-from backend.serializers import UserSerializer, UserInfoSerializer
+from backend.serializers import UserSerializer, UserInfoSerializer, CourseSerializer, CourseDetailSerializer
 
 from backend.signals import new_user_registered
 
-from backend.models import ConfirmEmailToken, UserInfo
+from backend.models import ConfirmEmailToken, UserInfo, Course
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -98,3 +99,13 @@ class AccountInfo(APIView):
                 return JsonResponse({'Status': False, 'Errors': serializer.errors})
 
         return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
+
+
+class CourseList(ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+
+class CourseDetail(RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseDetailSerializer

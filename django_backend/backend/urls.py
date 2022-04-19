@@ -1,6 +1,6 @@
 from django.urls import path
 
-from backend.views import RegisterAccount, ConfirmAccount, AccountInfo
+from backend.views import RegisterAccount, ConfirmAccount, AccountInfo, CourseList, CourseDetail
 
 from django_rest_passwordreset.views import reset_password_request_token, reset_password_confirm
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -22,4 +22,7 @@ urlpatterns = [
 
     # Получение и редактирование информации о профиле
     path('user/profile', AccountInfo.as_view(), name='user-profile'),
+
+    path('courses', CourseList.as_view(), name='courses'),
+    path('courses/<int:pk>', CourseDetail.as_view(), name='course-info'),
 ]

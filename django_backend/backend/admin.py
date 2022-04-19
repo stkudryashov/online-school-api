@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from backend.models import User, ConfirmEmailToken, UserInfo
+from backend.models import User, ConfirmEmailToken, UserInfo, Module, Course, CourseModule, Classroom, StudentClassroom
 
 
 @admin.register(User)
@@ -33,10 +33,35 @@ class CustomUserAdmin(UserAdmin):
 
 
 @admin.register(UserInfo)
-class ContactAdmin(admin.ModelAdmin):
+class UserInfoAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(ConfirmEmailToken)
 class ConfirmEmailTokenAdmin(admin.ModelAdmin):
     list_display = ('user', 'key', 'created_at')
+
+
+@admin.register(Module)
+class ModuleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(CourseModule)
+class CourseModuleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Classroom)
+class ClassroomAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(StudentClassroom)
+class StudentClassroomAdmin(admin.ModelAdmin):
+    pass

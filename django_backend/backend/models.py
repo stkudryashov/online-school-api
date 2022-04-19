@@ -161,11 +161,27 @@ class UserInfo(models.Model):
         verbose_name_plural = 'Информация о пользователях'
 
 
+class Module(models.Model):
+    """Учебные модули, которыми можно наполнять различные курсы"""
+
+    title = models.CharField(max_length=32, verbose_name='Название модуля', blank=True, null=True)
+    description = models.TextField(verbose_name='Описание модуля', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Модуль'
+        verbose_name_plural = 'Модули'
+
+
 class Course(models.Model):
     """Модель курса"""
 
-    title = models.CharField(verbose_name='Название курса', blank=True, null=True)
+    title = models.CharField(max_length=32, verbose_name='Название курса', blank=True, null=True)
     description = models.TextField(verbose_name='Описание курса', blank=True, null=True)
+
+    modules = models.ManyToManyField(Module, through='CourseModule', verbose_name='Модули курса')
 
     def __str__(self):
         return f'{self.title}'
@@ -175,10 +191,24 @@ class Course(models.Model):
         verbose_name_plural = 'Курсы'
 
 
+class CourseModule(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    module = models.ForeignKey(Module, on_delete=models.PROTECT, verbose_name='Модуль')
+
+    order_number = models.PositiveIntegerField(verbose_name='Порядок модуля в курсе')
+
+    def __str__(self):
+        return f'{self.course.title} - {self.module.title} - {self.order_number}'
+
+    class Meta:
+        verbose_name = 'Модуль курса'
+        verbose_name_plural = 'Модули курса'
+
+
 class Classroom(models.Model):
     """Модель учебной группы"""
 
-    title = models.CharField(verbose_name='Название группы')
+    title = models.CharField(max_length=32, verbose_name='Название группы')
 
     date_start = models.DateField(blank=True, null=True, verbose_name='Дата начала учебы')
     date_end = models.DateField(blank=True, null=True, verbose_name='Дата завершения учебы')
