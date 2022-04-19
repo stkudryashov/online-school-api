@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
 
-    'backend.apps.BackendConfig',
+    'accounts.apps.AccountsConfig',
+    'courses.apps.CoursesConfig',
+    'modules.apps.ModulesConfig',
+    'classrooms.apps.ClassroomsConfig'
 ]
 
 MIDDLEWARE = [
@@ -94,7 +97,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'backend.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
 from django.dispatch import receiver, Signal
-from backend.models import ConfirmEmailToken
+from accounts.models import ConfirmEmailToken
 
 from django_rest_passwordreset.signals import reset_password_token_created
 
