@@ -10,4 +10,4 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'teacher', 'module', 'order_number']

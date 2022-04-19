@@ -19,7 +19,7 @@ class Classroom(models.Model):
                                related_name='classrooms', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.date_start} - {self.date_end}'
+        return f'{self.title}'
 
     class Meta:
         verbose_name = 'Учебная группа'
@@ -29,8 +29,8 @@ class Classroom(models.Model):
 class StudentClassroom(models.Model):
     """Учебная группа ученика"""
 
-    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.CASCADE, blank=True, null=True)
-    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE, blank=True, null=True)
+    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.CASCADE)
+    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE)
 
     is_completed = models.BooleanField(default=False, verbose_name='Закончил обучение')
 
@@ -40,3 +40,7 @@ class StudentClassroom(models.Model):
     class Meta:
         verbose_name = 'Учебная группа ученика'
         verbose_name_plural = 'Учебные группы учеников'
+
+        constraints = [
+            models.UniqueConstraint(fields=['classroom', 'student'], name='unique_student_classroom'),
+        ]
