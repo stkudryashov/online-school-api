@@ -136,6 +136,7 @@ class ConfirmEmailToken(models.Model):
 
 
 class UserInfo(models.Model):
+    """Информация о пользователе"""
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='user_info')
 
     date_of_birth = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
@@ -158,3 +159,38 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = 'Информация о пользователе'
         verbose_name_plural = 'Информация о пользователях'
+
+
+class Course(models.Model):
+    """Модель курса"""
+
+    title = models.CharField(verbose_name='Название курса', blank=True, null=True)
+    description = models.TextField(verbose_name='Описание курса', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
+
+
+class Classroom(models.Model):
+    """Модель Учебной группы"""
+
+    date_start = models.DateField(blank=True, null=True, verbose_name='Дата начала учебы')
+    date_end = models.DateField(blank=True, null=True, verbose_name='Дата завершения учебы')
+    course = models.ForeignKey(Course, verbose_name='Название курса', on_delete=models.PROTECT, blank=True, null=True)
+    mentor = models.ForeignKey(User, verbose_name='Ментор', on_delete=models.SET_NULL, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Учебная группа'
+        verbose_name_plural = 'Учебные группы'
+
+
+class StudentClassroom(models.Model):
+    """Учебная группа ученика"""
+
+    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.CASCADE, blank=True, null=True)
+    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Учебная группа ученика'
+        verbose_name_plural = 'Учебные группы учеников'
