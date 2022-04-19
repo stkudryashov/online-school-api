@@ -1,8 +1,13 @@
 from django.contrib import admin
 
-from modules.models import Module
+from modules.models import Module, Lesson
 
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
     pass
