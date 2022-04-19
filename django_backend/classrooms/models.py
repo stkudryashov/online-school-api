@@ -77,7 +77,7 @@ class Homework(models.Model):
                                  blank=True, null=True)
 
     def __str__(self):
-        return f'{self.schedule.title} - {self.classroom.title}'
+        return f'{self.schedule} - {self.student.email}'
 
     class Meta:
         verbose_name = 'Домашнее задание'

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from classrooms.models import Classroom, StudentClassroom
+from classrooms.models import Classroom, StudentClassroom, Schedule, Homework
 
 
 @admin.register(Classroom)
@@ -12,3 +12,4 @@ class ClassroomAdmin(admin.ModelAdmin):
 class StudentClassroomAdmin(admin.ModelAdmin):
     list_display = ['classroom', 'student', 'is_completed']
     search_fields = ['classroom__title', 'student__email']
+
