@@ -91,7 +91,7 @@ class User(AbstractUser):
     type = models.CharField(choices=USER_TYPE, max_length=16, default='student', verbose_name='Тип пользователя')
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.email}'
 
     class Meta:
         verbose_name = 'Пользователь'

@@ -1,5 +1,6 @@
 from django.db import models
 
+from accounts.models import User
 from modules.models import Module
 
 
@@ -25,6 +26,9 @@ class CourseModule(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
     module = models.ForeignKey(Module, on_delete=models.PROTECT, verbose_name='Модуль')
 
+    teacher = models.ForeignKey(User, verbose_name='Учитель', on_delete=models.SET_NULL,
+                                related_name='lessons', blank=True, null=True)
+
     order_number = models.PositiveIntegerField(verbose_name='Порядок модуля в курсе')
 
     def __str__(self):
@@ -33,3 +37,5 @@ class CourseModule(models.Model):
     class Meta:
         verbose_name = 'Модуль курса'
         verbose_name_plural = 'Модули курса'
+
+        ordering = ['course', 'order_number']

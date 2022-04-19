@@ -1,7 +1,5 @@
 from django.db import models
 
-from accounts.models import User
-
 
 class Module(models.Model):
     """Учебные модули, которыми можно наполнять различные курсы"""
@@ -23,9 +21,6 @@ class Lesson(models.Model):
 
     document_url = models.URLField(max_length=128, verbose_name='Ссылка на документ')
     homework_url = models.URLField(max_length=128, verbose_name='Ссылка на домашнее задание')
-
-    teacher = models.ForeignKey(User, verbose_name='Учитель', on_delete=models.SET_NULL,
-                                related_name='lessons', blank=True, null=True)
 
     module = models.ForeignKey(Module, verbose_name='Модуль', on_delete=models.PROTECT,
                                related_name='lessons', blank=True, null=True)

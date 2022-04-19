@@ -10,4 +10,4 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['title', 'teacher', 'module', 'order_number']
+    list_display = ['title', 'module', 'order_number']

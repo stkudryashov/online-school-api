@@ -41,6 +41,8 @@ class StudentClassroom(models.Model):
         verbose_name = 'Учебная группа ученика'
         verbose_name_plural = 'Учебные группы учеников'
 
+        ordering = ['classroom']
+
         constraints = [
             models.UniqueConstraint(fields=['classroom', 'student'], name='unique_student_classroom'),
         ]

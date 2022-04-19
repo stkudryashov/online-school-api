@@ -6,7 +6,7 @@ from modules.models import Module, Lesson
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ('id', 'module', 'title', 'description', 'document_url', 'homework_url', 'teacher', 'order_number')
+        fields = ('id', 'module', 'title', 'description', 'document_url', 'homework_url', 'order_number')
         read_only_fields = ('id',)
         extra_kwargs = {
             'module': {'write_only': True}

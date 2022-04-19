@@ -5,9 +5,10 @@ from classrooms.models import Classroom, StudentClassroom
 
 @admin.register(Classroom)
 class ClassroomAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'course', 'mentor', 'date_start', 'date_end']
 
 
 @admin.register(StudentClassroom)
 class StudentClassroomAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['classroom', 'student', 'is_completed']
+    search_fields = ['classroom__title', 'student__email']

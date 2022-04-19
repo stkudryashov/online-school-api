@@ -5,9 +5,9 @@ from courses.models import Course, CourseModule
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title']
 
 
 @admin.register(CourseModule)
 class CourseModuleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['course', 'module', 'teacher', 'order_number']
