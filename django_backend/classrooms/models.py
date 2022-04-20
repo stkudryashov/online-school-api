@@ -17,7 +17,7 @@ class Classroom(models.Model):
                                related_name='classrooms', blank=True, null=True)
 
     mentor = models.ForeignKey(User, verbose_name='Ментор', on_delete=models.SET_NULL,
-                               related_name='classrooms', blank=True, null=True)
+                               related_name='classrooms', limit_choices_to={'type': 'mentor'}, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title}'
@@ -31,7 +31,8 @@ class StudentClassroom(models.Model):
     """Учебная группа ученика"""
 
     classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.CASCADE)
-    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE)
+    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE,
+                                limit_choices_to={'type': 'student'})
 
     is_completed = models.BooleanField(default=False, verbose_name='Закончил обучение')
 
@@ -49,7 +50,9 @@ class StudentClassroom(models.Model):
 class Schedule(models.Model):
     """Расписание"""
 
-    teacher = models.ForeignKey(User, verbose_name='Преподаватель', on_delete=models.SET_NULL, blank=True, null=True)
+    teacher = models.ForeignKey(User, verbose_name='Преподаватель', on_delete=models.SET_NULL,
+                                limit_choices_to={'type': 'teacher'}, blank=True, null=True)
+
     classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.SET_NULL, blank=True, null=True)
     lesson = models.ForeignKey(Lesson, verbose_name='Урок', on_delete=models.PROTECT, blank=True, null=True)
 
@@ -68,7 +71,9 @@ class Homework(models.Model):
 
     homework = models.URLField(verbose_name='Ссылка на домашнее задание', max_length=200, blank=True, null=True)
 
-    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE, blank=True, null=True)
+    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE,
+                                limit_choices_to={'type': 'student'}, blank=True, null=True)
+
     schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE, blank=True, null=True)
 
     is_accepted = models.BooleanField(default=False, verbose_name='Домашняя работа выполнена верно')
