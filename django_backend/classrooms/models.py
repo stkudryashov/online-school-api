@@ -49,32 +49,30 @@ class StudentClassroom(models.Model):
 class Schedule(models.Model):
     """Расписание"""
 
-    teacher = models.ForeignKey(User, verbose_name='Преподователь', on_delete=models.SET_NULL,
-                                blank=True, null=True)
-    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.SET_NULL,
-                                  blank=True, null=True)
-    subject = models.ForeignKey(Lesson, verbose_name='Предмет', on_delete=models.PROTECT,
-                                blank=True, null=True)
-    date_of_lesson = models.DateField(blank=True, null=True, verbose_name='Дата проведения занятия')
+    teacher = models.ForeignKey(User, verbose_name='Преподаватель', on_delete=models.SET_NULL, blank=True, null=True)
+    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.SET_NULL, blank=True, null=True)
+    lesson = models.ForeignKey(Lesson, verbose_name='Урок', on_delete=models.PROTECT, blank=True, null=True)
+
+    date_of_lesson = models.DateTimeField(blank=True, null=True, verbose_name='Дата проведения занятия')
 
     def __str__(self):
-        return f'{self.subject.title} - {self.classroom.title}'
+        return f'{self.lesson.title} - {self.classroom.title}'
 
     class Meta:
         verbose_name = 'Расписание'
-        verbose_name_plural = 'Расписания'
+        verbose_name_plural = 'Расписание'
 
 
 class Homework(models.Model):
     """Домашнее задание ученика"""
-    homework = models.URLField(verbose_name='Ссылка на домашнее задание', max_length=200,
-                               blank=True, null=True)
-    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE,
-                                blank=True, null=True)
-    date_of_publication = models.DateField(auto_now_add=True)
+
+    homework = models.URLField(verbose_name='Ссылка на домашнее задание', max_length=200, blank=True, null=True)
+
+    student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE, blank=True, null=True)
+    schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE, blank=True, null=True)
+
     is_accepted = models.BooleanField(default=False, verbose_name='Домашняя работа выполнена верно')
-    schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE,
-                                 blank=True, null=True)
+    date_of_publication = models.DateField(auto_now_add=True, verbose_name='Дата сдачи работы')
 
     def __str__(self):
         return f'{self.schedule} - {self.student.email}'
