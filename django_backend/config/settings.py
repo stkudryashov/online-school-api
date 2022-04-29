@@ -23,12 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4!vus_#9)0x1%hg(e47b9$+lg*nuppqjf1t7_eseb1)gk$m5o1'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:1337']
 
 
 # Application definition
@@ -95,9 +97,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB', 'python_school'),
+        'USER': os.environ.get('POSTGRES_USER', 'root'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'root'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+    },
 }
 
 
@@ -139,6 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -149,8 +156,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.yandex.ru')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'aleks59niki30@yandex.ru')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'hbwivucoyvypjnur')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'email@yandex.ru')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'smtp_password')
 EMAIL_PORT = os.environ.get('EMAIL_PORT', '465')
 
 EMAIL_USE_SSL = True

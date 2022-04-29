@@ -21,6 +21,10 @@ def courses_list(update: Update.callback_query):
     user = User.objects.get(telegram_id=update.message.chat_id)
     user_courses = get_student_courses(user)
 
+    if not user_courses:
+        update.message.reply_text('Ты еще на записан на курсы 😢')
+        return
+
     reply_markup = InlineKeyboardMarkup.from_column(
         [InlineKeyboardButton(
             i.get('course__title'), callback_data=f"ModulesList {i.get('course_id')}"

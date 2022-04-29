@@ -20,11 +20,13 @@ from telegrambot.management.commands.services import START_LOGIN, USER_EMAIL, HO
 import logging
 import telegram
 
+import os
+
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = 'TOKEN'
+TOKEN = os.environ.get('TOKEN')
 
 
 def start(update: Update, context: CallbackContext):
@@ -85,7 +87,7 @@ def messages(update: Update, context: CallbackContext):
     """Обработчик текстовых сообщений от нижнего меню"""
 
     if not User.objects.filter(telegram_id=update.message.chat_id).exists():
-        start(update, context)
+        update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
         return
 
     message = update.message.text

@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: database
+    image: postgres:14.2-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    env_file:
+      - ./.env
+    restart: always
+  backend:
+    container_name: backend
+    build: ./django_backend
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static-volume:/home/app/backend/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+    depends_on:
+      - database
+  server:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      - static-volume:/home/app/backend/staticfiles
+    ports:
+      - '1337:80'
+    depends_on:
+      - backend
+  telegram:
+    container_name: telegram
+    build: ./django_backend
+    command: python manage.py telegram
+    env_file:
+      - ./.env
+    depends_on:
+      - database
+      - backend
+      - server
+
+volumes:
+  postgres-data:
+  static-volume:
