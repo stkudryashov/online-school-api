@@ -89,6 +89,7 @@ class User(AbstractUser):
     )
 
     type = models.CharField(choices=USER_TYPE, max_length=16, default='student', verbose_name='Тип пользователя')
+    telegram_id = models.CharField(max_length=16, blank=True, null=True, verbose_name='Telegram ID')
 
     def __str__(self):
         return f'{self.email}'
