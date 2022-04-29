@@ -28,7 +28,7 @@ def get_student_lessons(user: User, module_id=None, course_id=None, wait_homewor
         schedule_query &= Q(classroom__course_id=course_id)
 
     if wait_homework:
-        schedule_query &= Q(homeworks__is_accepted=False)
+        schedule_query &= Q(homeworks__is_accepted=False) | Q(homeworks__isnull=True)
 
     schedules = Schedule.objects.filter(schedule_query)
     lessons = list(schedules.values('id', 'lesson__title'))

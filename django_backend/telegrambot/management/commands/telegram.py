@@ -13,7 +13,9 @@ from accounts.models import User
 from telegrambot.models import BotAnswer
 
 from telegrambot.management.commands.services import courses_list, modules_list, lessons_list, lessons_view
-from telegrambot.management.commands.services import homeworks_list
+from telegrambot.management.commands.services import homeworks_list, homeworks_send
+
+from telegrambot.management.commands.services import START_LOGIN, USER_EMAIL, HOMEWORK_URL
 
 import logging
 import telegram
@@ -22,10 +24,12 @@ import telegram
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-START_LOGIN, USER_EMAIL = range(2)
+TOKEN = 'TOKEN'
 
 
 def start(update: Update, context: CallbackContext):
+    """Запускает сценарий входа в аккаунт или отправляет главное меню"""
+
     if User.objects.filter(telegram_id=update.message.chat_id).exists():
         update.message.reply_text(
             'Личный кабинет 🖥',
@@ -43,11 +47,15 @@ def start(update: Update, context: CallbackContext):
 
 
 def login(update: Update, context: CallbackContext):
+    """Запрашивает электронную почту"""
+
     update.message.reply_text(BotAnswer.objects.get(query='Запрос почты').text)
     return USER_EMAIL
 
 
 def email(update: Update, context: CallbackContext):
+    """Проверяет корректность почты, в случае успеха присваивает telegram_id"""
+
     user_email = update.message.text
 
     try:
@@ -74,6 +82,8 @@ def email(update: Update, context: CallbackContext):
 
 
 def messages(update: Update, context: CallbackContext):
+    """Обработчик текстовых сообщений от нижнего меню"""
+
     if not User.objects.filter(telegram_id=update.message.chat_id).exists():
         start(update, context)
         return
@@ -91,6 +101,8 @@ def messages(update: Update, context: CallbackContext):
 
 
 def callbacks(update: Update, context: CallbackContext):
+    """Обработчик inline клавиатуры под сообщениями"""
+
     button_press = update.callback_query
 
     if 'CoursesList' in button_press.data:
@@ -133,11 +145,21 @@ def callbacks(update: Update, context: CallbackContext):
             pass
         finally:
             homeworks_list(button_press)
+    elif 'HomeworksSend' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            schedule_id = button_press.data.split(' ')[1]
+            context.user_data['schedule_id'] = schedule_id
+            button_press.message.reply_text('Отправь ссылку 📚')
+            return HOMEWORK_URL
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        updater = Updater('5340587003:AAHnwVksKrqpZuxlChoHsbbmWYqtZvkCCyA')
+        updater = Updater(TOKEN)
 
         dispatcher = updater.dispatcher
 
@@ -149,8 +171,16 @@ class Command(BaseCommand):
             },
             fallbacks=[CommandHandler('cancel', start)],
         )
-
         dispatcher.add_handler(login_handler)
+
+        homework_handler = ConversationHandler(
+            entry_points=[CallbackQueryHandler(callbacks)],
+            states={
+                HOMEWORK_URL: [MessageHandler(Filters.text & ~Filters.command, homeworks_send)],
+            },
+            fallbacks=[CommandHandler('cancel', start)],
+        )
+        dispatcher.add_handler(homework_handler)
 
         msg_handler = MessageHandler(Filters.text & ~Filters.command, messages)
         dispatcher.add_handler(msg_handler)

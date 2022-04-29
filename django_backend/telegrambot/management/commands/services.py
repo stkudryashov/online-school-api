@@ -1,12 +1,18 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CallbackContext, ConversationHandler
 
 from accounts.models import User
-from classrooms.models import Schedule, Homework
+from classrooms.models import Schedule
 from courses.models import Course
+from telegrambot.models import BotAnswer
 
-from classrooms.services import get_student_courses, get_student_lessons
+from classrooms.services import get_student_courses, get_student_lessons, send_student_homework
 
 from telegram import Update
+
+
+START_LOGIN, USER_EMAIL = range(2)
+HOMEWORK_URL = range(1)
 
 
 def courses_list(update: Update.callback_query):
@@ -74,15 +80,15 @@ def lessons_view(update: Update.callback_query, schedule_id, back_location):
     keyboard = [InlineKeyboardButton('Материалы урока 📒', url=schedule.lesson.document_url)]
 
     if schedule.homeworks.filter(student=user).exists():
-        homework = Homework.objects.get(student=user)
+        homework = schedule.homeworks.get(student=user)
 
         if homework.is_accepted:
             hw_status = 'Зачтено'
         else:
             hw_status = 'На проверке'
-            keyboard.append(InlineKeyboardButton('Исправить задание 📄', callback_data='pass'))
+            keyboard.append(InlineKeyboardButton('Исправить задание 📄', callback_data=f'HomeworksSend {schedule.id}'))
     else:
-        keyboard.append(InlineKeyboardButton('Сдать задание 📄', callback_data='pass'))
+        keyboard.append(InlineKeyboardButton('Сдать задание 📄', callback_data=f'HomeworksSend {schedule.id}'))
 
     message += f'*Домашнее задание*: _{hw_status}_'
 
@@ -120,3 +126,24 @@ def homeworks_list(update: Update.callback_query):
     )
 
     update.message.reply_text('Задания к этим урокам можно сдать или они на проверке 📚', reply_markup=reply_markup)
+
+
+def homeworks_send(update: Update, context: CallbackContext):
+    """Запрашивает ссылку на задание студента"""
+
+    schedule_id = context.user_data.get('schedule_id')
+    task_url = update.message.text
+
+    if not schedule_id:
+        update.message.reply_text('Как такое случилось? Ошибка 😢')
+        return ConversationHandler.END
+
+    user = User.objects.get(telegram_id=update.message.chat_id)
+    result = send_student_homework(user, schedule_id, task_url)
+
+    if result:
+        update.message.reply_text(BotAnswer.objects.get(query='Работа отправлена').text)
+        return ConversationHandler.END
+
+    update.message.reply_text(BotAnswer.objects.get(query='Неверная ссылка').text)
+    return HOMEWORK_URL
