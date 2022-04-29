@@ -10,8 +10,10 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, Ca
 from telegrambot.management.commands import keyboard
 
 from accounts.models import User
-from telegrambot.management.commands.courses import courses_view, courses_list
 from telegrambot.models import BotAnswer
+
+from telegrambot.management.commands.services import courses_list, modules_list, lessons_list, lessons_view
+from telegrambot.management.commands.services import homeworks_list
 
 import logging
 import telegram
@@ -76,38 +78,61 @@ def messages(update: Update, context: CallbackContext):
         start(update, context)
         return
 
-    user = User.objects.get(telegram_id=update.message.chat_id)
     message = update.message.text
 
     if message == 'Личный кабинет 🖥':
         start(update, context)
     elif message == 'Мои курсы 💼':
-        courses_list(update, user)
+        courses_list(update)
     elif message == 'Сдать работу 🎒':
-        pass
+        homeworks_list(update)
     else:
         update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
 
 
 def callbacks(update: Update, context: CallbackContext):
     button_press = update.callback_query
-    user = User.objects.get(telegram_id=button_press.message.chat_id)
 
-    if 'CourseList' in button_press.data:
+    if 'CoursesList' in button_press.data:
         try:
             button_press.message.delete()
         except telegram.TelegramError:
             pass
         finally:
-            courses_list(button_press, user)
-    elif 'CourseView' in button_press.data:
+            courses_list(button_press)
+    elif 'ModulesList' in button_press.data:
         try:
             button_press.message.delete()
         except telegram.TelegramError:
             pass
         finally:
             course_id = button_press.data.split(' ')[1]
-            courses_view(button_press, course_id)
+            modules_list(button_press, course_id)
+    elif 'LessonsList' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            module_id = button_press.data.split(' ')[1]
+            course_id = button_press.data.split(' ')[2]
+            lessons_list(button_press, module_id, course_id)
+    elif 'LessonsView' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            schedule_id = button_press.data.split(' ')[1]
+            back_location = button_press.data.split(' ')[2]
+            lessons_view(button_press, schedule_id, back_location)
+    elif 'HomeworksList' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            homeworks_list(button_press)
 
 
 class Command(BaseCommand):

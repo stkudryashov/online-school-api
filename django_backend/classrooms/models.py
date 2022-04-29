@@ -69,12 +69,13 @@ class Schedule(models.Model):
 class Homework(models.Model):
     """Домашнее задание ученика"""
 
-    homework = models.URLField(verbose_name='Ссылка на домашнее задание', max_length=200, blank=True, null=True)
+    url = models.URLField(verbose_name='Ссылка на домашнее задание', max_length=200, blank=True, null=True)
 
     student = models.ForeignKey(User, verbose_name='Ученик', on_delete=models.CASCADE,
                                 limit_choices_to={'type': 'student'}, blank=True, null=True)
 
-    schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE, blank=True, null=True)
+    schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE,
+                                 related_name='homeworks', blank=True, null=True)
 
     is_accepted = models.BooleanField(default=False, verbose_name='Домашняя работа выполнена верно')
     date_of_publication = models.DateField(auto_now_add=True, verbose_name='Дата сдачи работы')
