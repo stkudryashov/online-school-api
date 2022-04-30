@@ -56,3 +56,20 @@ def send_student_homework(user: User, schedule_id, task_url):
         return True
     except ValidationError:
         return False
+
+
+def get_teacher_classrooms(user: User):
+    """Возвращает список словарей (id, title) учебных групп учителя"""
+
+    classrooms = list(Classroom.objects.filter(schedule__teacher=user, is_end=False).values('id', 'title'))
+
+    return classrooms
+
+
+def get_teacher_lessons(user: User, classroom_id):
+    """Возвращает список словарей (id: Schedule, lesson__title) занятий преподавателя в выбранной группе"""
+
+    classroom = Classroom.objects.get(id=classroom_id)
+    lessons = list(classroom.schedule.filter(teacher=user).values('id', 'lesson__title'))
+
+    return lessons

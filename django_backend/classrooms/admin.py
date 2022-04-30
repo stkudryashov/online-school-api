@@ -5,7 +5,7 @@ from classrooms.models import Classroom, StudentClassroom, Schedule, Homework
 
 @admin.register(Classroom)
 class ClassroomAdmin(admin.ModelAdmin):
-    list_display = ['title', 'course', 'mentor', 'date_start', 'date_end']
+    list_display = ['title', 'course', 'mentor', 'date_start', 'date_end', 'is_end']
 
 
 @admin.register(StudentClassroom)

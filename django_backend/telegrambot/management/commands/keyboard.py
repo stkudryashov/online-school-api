@@ -8,7 +8,13 @@ LOGIN_BUTTON = ReplyKeyboardMarkup.from_button(
     )
 
 
-MAIN_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
+STUDENT_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
     button_column=['Мои курсы 💼', 'Сдать работу 🎒'],
+    resize_keyboard=True,
+)
+
+
+TEACHER_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
+    button_column=['Мои студенты 🧑🏼‍🎓', 'Уведомить студентов ☎️'],
     resize_keyboard=True,
 )

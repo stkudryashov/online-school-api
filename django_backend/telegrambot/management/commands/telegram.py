@@ -7,15 +7,19 @@ from telegram import Update
 from telegram.ext import Updater, Filters, CallbackContext
 from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler
 
-from telegrambot.management.commands import keyboard
-
 from accounts.models import User
 from telegrambot.models import BotAnswer
 
-from telegrambot.management.commands.services import courses_list, modules_list, lessons_list, lessons_view
-from telegrambot.management.commands.services import homeworks_list, homeworks_send
+from telegrambot.management.commands.services import get_user_keyboard, change_user_type
 
-from telegrambot.management.commands.services import START_LOGIN, USER_EMAIL, HOMEWORK_URL
+from telegrambot.management.commands.keyboard import LOGIN_BUTTON
+
+from telegrambot.management.commands.students import courses_list, modules_list, lessons_list, lessons_view
+from telegrambot.management.commands.students import homeworks_list, homeworks_send
+
+from telegrambot.management.commands.teachers import classrooms_list, teacher_lessons, lesson_info
+
+from telegrambot.management.commands.students import HOMEWORK_URL
 
 import logging
 import telegram
@@ -28,21 +32,25 @@ logger = logging.getLogger(__name__)
 
 TOKEN = os.environ.get('TOKEN')
 
+START_LOGIN, USER_EMAIL = range(2)
+
 
 def start(update: Update, context: CallbackContext):
     """Запускает сценарий входа в аккаунт или отправляет главное меню"""
 
     if User.objects.filter(telegram_id=update.message.chat_id).exists():
+        user = User.objects.get(telegram_id=update.message.chat_id)
+
         update.message.reply_text(
             'Личный кабинет 🖥',
-            reply_markup=keyboard.MAIN_MENU_KEYBOARD
+            reply_markup=get_user_keyboard(user)
         )
 
         return ConversationHandler.END
 
     update.message.reply_text(
         text=BotAnswer.objects.get(query='Приветствие').text,
-        reply_markup=keyboard.LOGIN_BUTTON
+        reply_markup=LOGIN_BUTTON
     )
 
     return START_LOGIN
@@ -74,7 +82,7 @@ def email(update: Update, context: CallbackContext):
 
         update.message.reply_text(
             f'Добрый день, {user.first_name}!',
-            reply_markup=keyboard.MAIN_MENU_KEYBOARD
+            reply_markup=get_user_keyboard(user)
         )
 
         return ConversationHandler.END
@@ -90,16 +98,25 @@ def messages(update: Update, context: CallbackContext):
         update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
         return
 
+    user = User.objects.get(telegram_id=update.message.chat_id)
+
     message = update.message.text
 
     if message == 'Личный кабинет 🖥':
         start(update, context)
-    elif message == 'Мои курсы 💼':
-        courses_list(update)
-    elif message == 'Сдать работу 🎒':
-        homeworks_list(update)
+
+    if user.type == 'teacher':
+        if message == 'Мои студенты 🧑🏼‍🎓':
+            classrooms_list(update)
+        else:
+            update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
     else:
-        update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
+        if message == 'Мои курсы 💼':
+            courses_list(update)
+        elif message == 'Сдать работу 🎒':
+            homeworks_list(update)
+        else:
+            update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
 
 
 def callbacks(update: Update, context: CallbackContext):
@@ -157,6 +174,30 @@ def callbacks(update: Update, context: CallbackContext):
             context.user_data['schedule_id'] = schedule_id
             button_press.message.reply_text('Отправь ссылку 📚')
             return HOMEWORK_URL
+    elif 'ClassroomsList' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            classrooms_list(button_press)
+    elif 'TeacherClassroom' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            classroom_id = button_press.data.split(' ')[1]
+            teacher_lessons(button_press, classroom_id)
+    elif 'TeacherLesson' in button_press.data:
+        try:
+            button_press.message.delete()
+        except telegram.TelegramError:
+            pass
+        finally:
+            classroom_id = button_press.data.split(' ')[1]
+            schedule_id = button_press.data.split(' ')[2]
+            lesson_info(button_press, classroom_id, schedule_id)
 
 
 class Command(BaseCommand):
@@ -188,7 +229,10 @@ class Command(BaseCommand):
         dispatcher.add_handler(msg_handler)
 
         btn_handler = CallbackQueryHandler(callbacks)
-        updater.dispatcher.add_handler(btn_handler)
+        dispatcher.add_handler(btn_handler)
+
+        # Смена типа своего аккаунта (только для superuser)
+        dispatcher.add_handler(CommandHandler('type', change_user_type))
 
         updater.start_polling()
         updater.idle()

@@ -19,6 +19,8 @@ class Classroom(models.Model):
     mentor = models.ForeignKey(User, verbose_name='Ментор', on_delete=models.SET_NULL,
                                related_name='classrooms', limit_choices_to={'type': 'mentor'}, blank=True, null=True)
 
+    is_end = models.BooleanField(default=False, verbose_name='Обучение закончено')
+
     def __str__(self):
         return f'{self.title}'
 
@@ -53,7 +55,9 @@ class Schedule(models.Model):
     teacher = models.ForeignKey(User, verbose_name='Преподаватель', on_delete=models.SET_NULL,
                                 limit_choices_to={'type': 'teacher'}, blank=True, null=True)
 
-    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.SET_NULL, blank=True, null=True)
+    classroom = models.ForeignKey(Classroom, verbose_name='Группа', on_delete=models.SET_NULL,
+                                  related_name='schedule', blank=True, null=True)
+
     lesson = models.ForeignKey(Lesson, verbose_name='Урок', on_delete=models.PROTECT, blank=True, null=True)
 
     date_of_lesson = models.DateTimeField(blank=True, null=True, verbose_name='Дата проведения занятия')
@@ -86,3 +90,7 @@ class Homework(models.Model):
     class Meta:
         verbose_name = 'Домашнее задание'
         verbose_name_plural = 'Домашние задания'
+
+        constraints = [
+            models.UniqueConstraint(fields=['student', 'schedule'], name='unique_student_schedule'),
+        ]
