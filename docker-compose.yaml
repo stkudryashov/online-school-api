@@ -33,7 +33,7 @@ services:
     volumes:
       - static-volume:/home/app/backend/staticfiles
     ports:
-      - '1337:80'
+      - '80:80'
     depends_on:
       - backend
   telegram:
