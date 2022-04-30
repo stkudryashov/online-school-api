@@ -7,7 +7,8 @@
       "date_start": "2022-04-01",
       "date_end": "2022-04-19",
       "course": 1,
-      "mentor": 4
+      "mentor": 4,
+      "is_end": false
     }
   },
   {
@@ -18,7 +19,8 @@
       "date_start": "2022-04-19",
       "date_end": "2022-04-01",
       "course": 2,
-      "mentor": 4
+      "mentor": 4,
+      "is_end": false
     }
   },
   {
