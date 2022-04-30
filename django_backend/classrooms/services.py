@@ -61,7 +61,7 @@ def send_student_homework(user: User, schedule_id, task_url):
 def get_teacher_classrooms(user: User):
     """Возвращает список словарей (id, title) учебных групп учителя"""
 
-    classrooms = list(Classroom.objects.filter(schedule__teacher=user, is_end=False).values('id', 'title'))
+    classrooms = list(Classroom.objects.filter(schedule__teacher=user, is_end=False).values('id', 'title').distinct())
 
     return classrooms
 

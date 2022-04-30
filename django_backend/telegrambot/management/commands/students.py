@@ -9,6 +9,7 @@ from telegrambot.models import BotAnswer
 from classrooms.services import get_student_courses, get_student_lessons, send_student_homework
 
 from telegram import Update
+from telegram import ParseMode
 
 
 HOMEWORK_URL = range(1)
@@ -75,7 +76,7 @@ def lessons_view(update: Update.callback_query, schedule_id, back_location):
     user = User.objects.get(telegram_id=update.message.chat_id)
     schedule = Schedule.objects.get(id=schedule_id)
 
-    schedule_title = schedule.lesson.title.replace('.', '\.')
+    schedule_title = schedule.lesson.title.replace('.', '\.').replace('-', '\-')
     hw_status = 'Не сдано'
 
     message = f"*Урок:* _{schedule_title}_\n"
@@ -140,6 +141,21 @@ def homeworks_send(update: Update, context: CallbackContext):
 
     if result:
         update.message.reply_text(BotAnswer.objects.get(query='Работа отправлена').text)
+
+        schedule = Schedule.objects.get(id=schedule_id)
+
+        if schedule.teacher.telegram_id:
+            full_name = f'{user.first_name} {user.last_name}'
+            classroom = schedule.classroom.title.replace('.', '\.').replace('-', '\-')
+            lesson = schedule.lesson.title.replace('.', '\.').replace('-', '\-')
+
+            message = f'Студент *{full_name}* из группы *{classroom}* отправил домашнее задание по уроку *{lesson}* 🥰'
+
+            context.bot.send_message(
+                chat_id=schedule.teacher.telegram_id,
+                text=message,
+                parse_mode=ParseMode.MARKDOWN_V2)
+
         return ConversationHandler.END
 
     update.message.reply_text(BotAnswer.objects.get(query='Неверная ссылка').text)
