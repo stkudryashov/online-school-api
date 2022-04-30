@@ -59,6 +59,14 @@ def start(update: Update, context: CallbackContext):
 def login(update: Update, context: CallbackContext):
     """Запрашивает электронную почту"""
 
+    if update.message.text != 'Войти 🏫':
+        update.message.reply_text(
+            'Для входа в свой аккаунт нажми кнопку ниже ⬇️',
+            reply_markup=LOGIN_BUTTON
+        )
+
+        return START_LOGIN
+
     update.message.reply_text(BotAnswer.objects.get(query='Запрос почты').text)
     return USER_EMAIL
 
@@ -209,7 +217,7 @@ class Command(BaseCommand):
         login_handler = ConversationHandler(
             entry_points=[CommandHandler('start', start)],
             states={
-                START_LOGIN: [MessageHandler(Filters.text(['Войти 🏫']) & ~Filters.command, login)],
+                START_LOGIN: [MessageHandler(Filters.text, login)],
                 USER_EMAIL: [MessageHandler(Filters.text & ~Filters.command, email)],
             },
             fallbacks=[CommandHandler('cancel', start)],
