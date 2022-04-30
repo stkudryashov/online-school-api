@@ -209,7 +209,7 @@ class Command(BaseCommand):
         login_handler = ConversationHandler(
             entry_points=[CommandHandler('start', start)],
             states={
-                START_LOGIN: [MessageHandler(Filters.text(['Войти 🏫']), login)],
+                START_LOGIN: [MessageHandler(Filters.text(['Войти 🏫']) & ~Filters.command, login)],
                 USER_EMAIL: [MessageHandler(Filters.text & ~Filters.command, email)],
             },
             fallbacks=[CommandHandler('cancel', start)],
