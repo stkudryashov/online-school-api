@@ -71,7 +71,9 @@ def get_student_schedule(user: User, view_range=None):
         schedule_query &= Q(date_of_lesson__gte=datetime.now() - timedelta(hours=2))
         schedule_query &= Q(date_of_lesson__lte=datetime.now() + timedelta(days=view_range))
 
-    schedule = Schedule.objects.filter(schedule_query).values('lesson__title', 'date_of_lesson').distinct()
+    schedule = Schedule.objects.filter(
+        schedule_query
+    ).order_by('date_of_lesson').values('lesson__title', 'date_of_lesson').distinct()
 
     return schedule
 
