@@ -69,7 +69,7 @@ class Schedule(models.Model):
         verbose_name = 'Расписание'
         verbose_name_plural = 'Расписание'
 
-        ordering = ['-date_of_lesson']
+        ordering = ['date_of_lesson']
 
 
 class Homework(models.Model):
