@@ -9,7 +9,7 @@ LOGIN_BUTTON = ReplyKeyboardMarkup.from_button(
 
 
 STUDENT_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
-    button_column=['Мои курсы 💼', 'Сдать работу 🎒'],
+    button_column=['Мои курсы 💼', 'Сдать работу 🎒', 'Ближайшие занятия 📔'],
     resize_keyboard=True,
 )
 

@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.db.models import Q
 
 from accounts.models import User
@@ -58,6 +60,20 @@ def send_student_homework(user: User, schedule_id, task_url):
         return True
     except ValidationError:
         return False
+
+
+def get_student_schedule(user: User, view_range=None):
+    """Возвращает список словарей (lesson__title, date_of_lesson) расписания студента"""
+
+    schedule_query = Q(classroom__studentclassroom__student=user)
+
+    if view_range:
+        schedule_query &= Q(date_of_lesson__gte=datetime.now() - timedelta(hours=2))
+        schedule_query &= Q(date_of_lesson__lte=datetime.now() + timedelta(days=view_range))
+
+    schedule = Schedule.objects.filter(schedule_query).values('lesson__title', 'date_of_lesson').distinct()
+
+    return schedule
 
 
 def get_teacher_classrooms(user: User):

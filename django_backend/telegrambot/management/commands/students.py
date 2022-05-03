@@ -6,7 +6,7 @@ from classrooms.models import Schedule
 from courses.models import Course
 from telegrambot.models import BotAnswer
 
-from classrooms.services import get_student_courses, get_student_lessons, send_student_homework
+from classrooms.services import get_student_courses, get_student_lessons, send_student_homework, get_student_schedule
 
 from telegram import Update
 from telegram import ParseMode
@@ -117,7 +117,7 @@ def homeworks_list(update: Update.callback_query):
     user_lessons = get_student_lessons(user, wait_homework=True)
 
     if not user_lessons:
-        update.message.reply_text('Нет заданий на проверке или требующих сдачи 🥰')
+        update.message.reply_text('Нет заданий требующих сдачи 🥰')
         return
 
     reply_markup = InlineKeyboardMarkup.from_column(
@@ -163,3 +163,23 @@ def homeworks_send(update: Update, context: CallbackContext):
 
     update.message.reply_text(BotAnswer.objects.get(query='Неверная ссылка').text)
     return HOMEWORK_URL
+
+
+def student_schedule(update: Update.callback_query):
+    """Отправляет студенту его ближайшие занятия"""
+
+    user = User.objects.get(telegram_id=update.message.chat_id)
+    schedule = get_student_schedule(user, 7)
+
+    if not schedule:
+        update.message.reply_text('Ближайших занятий нет 🥰')
+        return
+
+    message = 'Твои ближайшие занятия 📔\n'
+
+    for lesson in schedule:
+        title = lesson.get('lesson__title').replace('.', '\.').replace('-', '\-')
+        date_of_lesson = lesson.get('date_of_lesson').replace('.', '\.').replace('-', '\-')
+        message += f'\n*{title}* - _{date_of_lesson} МСК_'
+
+    update.message.reply_markdown_v2(message)

@@ -123,6 +123,8 @@ def messages(update: Update, context: CallbackContext):
             courses_list(update)
         elif message == 'Сдать работу 🎒':
             homeworks_list(update)
+        elif message == 'Ближайшие занятия 📔':
+            pass
         else:
             update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
 
