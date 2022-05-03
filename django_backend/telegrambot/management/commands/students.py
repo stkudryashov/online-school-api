@@ -184,8 +184,8 @@ def student_schedule(update: Update.callback_query):
 
         date_of_lesson = lesson.get('date_of_lesson')
 
-        date = dateformat.format(schedule.date_of_lesson, 'd E')
-        time = dateformat.time_format(schedule.date_of_lesson, 'H:i')
+        date = dateformat.format(date_of_lesson, 'd E')
+        time = dateformat.time_format(date_of_lesson, 'H:i')
 
         message += f'\n*{title}* - _{date} {time} МСК_'
 
