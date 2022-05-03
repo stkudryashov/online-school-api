@@ -88,9 +88,12 @@ def lessons_view(update: Update.callback_query, schedule_id, back_location):
 
         if homework.is_accepted:
             hw_status = 'Зачтено'
+        elif homework.need_to_fix:
+            hw_status = 'Доработать'
+            keyboard.append(InlineKeyboardButton('Исправить задание 📄', callback_data=f'HomeworksSend {schedule.id}'))
         else:
             hw_status = 'На проверке'
-            keyboard.append(InlineKeyboardButton('Исправить задание 📄', callback_data=f'HomeworksSend {schedule.id}'))
+            keyboard.append(InlineKeyboardButton('Изменить ссылку 🔗', callback_data=f'HomeworksSend {schedule.id}'))
     else:
         keyboard.append(InlineKeyboardButton('Сдать задание 📄', callback_data=f'HomeworksSend {schedule.id}'))
 
@@ -123,7 +126,7 @@ def homeworks_list(update: Update.callback_query):
         ) for i in user_lessons]
     )
 
-    update.message.reply_text('Задания к этим урокам можно сдать или они на проверке 📚', reply_markup=reply_markup)
+    update.message.reply_text('Домашнее задание к этим урокам можно сдать 📚', reply_markup=reply_markup)
 
 
 def homeworks_send(update: Update, context: CallbackContext):

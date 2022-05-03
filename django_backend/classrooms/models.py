@@ -81,7 +81,9 @@ class Homework(models.Model):
     schedule = models.ForeignKey(Schedule, verbose_name='Урок', on_delete=models.CASCADE,
                                  related_name='homeworks', blank=True, null=True)
 
-    is_accepted = models.BooleanField(default=False, verbose_name='Домашняя работа выполнена верно')
+    need_to_fix = models.BooleanField(default=False, verbose_name='Требует доработки')
+    is_accepted = models.BooleanField(default=False, verbose_name='Работа выполнена верно')
+
     date_of_publication = models.DateField(auto_now_add=True, verbose_name='Дата сдачи работы')
 
     def __str__(self):

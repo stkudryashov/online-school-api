@@ -28,7 +28,7 @@ def get_student_lessons(user: User, module_id=None, course_id=None, wait_homewor
         schedule_query &= Q(classroom__course_id=course_id)
 
     if wait_homework:
-        schedule_query &= Q(homeworks__is_accepted=False) | Q(homeworks__isnull=True)
+        schedule_query &= Q(homeworks__is_accepted=False, homeworks__need_to_fix=True) | Q(homeworks__isnull=True)
 
     schedules = Schedule.objects.filter(schedule_query)
     lessons = list(schedules.values('id', 'lesson__title'))
@@ -51,6 +51,8 @@ def send_student_homework(user: User, schedule_id, task_url):
         )
 
         homework.url = task_url
+        homework.need_to_fix = False
+
         homework.save()
 
         return True
