@@ -26,7 +26,8 @@ def new_user_registered_signal(user_id, **kwargs):
         # from:
         settings.EMAIL_HOST_USER,
         # to:
-        [token.user.email])
+        [token.user.email]
+    )
 
     msg.send()
 
