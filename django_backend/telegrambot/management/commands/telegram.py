@@ -15,7 +15,7 @@ from telegrambot.management.commands.services import get_user_keyboard, change_u
 from telegrambot.management.commands.keyboard import LOGIN_BUTTON
 
 from telegrambot.management.commands.students import courses_list, modules_list, lessons_list, lessons_view
-from telegrambot.management.commands.students import homeworks_list, homeworks_send
+from telegrambot.management.commands.students import homeworks_list, homeworks_send, student_schedule
 
 from telegrambot.management.commands.teachers import classrooms_list, teacher_lessons, lesson_info
 
@@ -124,7 +124,7 @@ def messages(update: Update, context: CallbackContext):
         elif message == 'Сдать работу 🎒':
             homeworks_list(update)
         elif message == 'Ближайшие занятия 📔':
-            pass
+            student_schedule(update)
         else:
             update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
 
