@@ -51,15 +51,15 @@ def lesson_info(update: Update.callback_query, classroom_id, schedule_id):
     schedule = Schedule.objects.get(id=schedule_id)
 
     title = schedule.lesson.title.replace('.', '\.')
-    time = dateformat.time_format(schedule.date_of_lesson, 'H:i')
     date = dateformat.format(schedule.date_of_lesson, 'd E')
+    time = dateformat.time_format(schedule.date_of_lesson, 'H:i')
 
     hw_all = schedule.classroom.studentclassroom_set.all().count()
     hw_waiting = schedule.homeworks.all().count()
     hw_accepted = schedule.homeworks.filter(is_accepted=True).count()
 
     message = f"*Урок:* _{title}_\n"\
-              f"*Дата урока:* _{time} {date}_\n\n"\
+              f"*Дата урока:* _{date} {time}_\n\n"\
               f"*Отправили работы:* _{hw_waiting} / {hw_all}\n_"\
               f"*Получили зачет:* _{hw_accepted}_"
 

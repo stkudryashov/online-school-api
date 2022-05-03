@@ -1,3 +1,5 @@
+from django.utils import dateformat
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -179,7 +181,12 @@ def student_schedule(update: Update.callback_query):
 
     for lesson in schedule:
         title = lesson.get('lesson__title').replace('.', '\.').replace('-', '\-')
-        date_of_lesson = lesson.get('date_of_lesson').replace('.', '\.').replace('-', '\-')
-        message += f'\n*{title}* - _{date_of_lesson} МСК_'
+
+        date_of_lesson = lesson.get('date_of_lesson')
+
+        date = dateformat.format(schedule.date_of_lesson, 'd E')
+        time = dateformat.time_format(schedule.date_of_lesson, 'H:i')
+
+        message += f'\n*{title}* - _{date} {time} МСК_'
 
     update.message.reply_markdown_v2(message)
