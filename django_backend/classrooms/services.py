@@ -32,7 +32,7 @@ def get_student_lessons(user: User, module_id=None, course_id=None, wait_homewor
     if wait_homework:
         schedule_query &= Q(homeworks__is_accepted=False, homeworks__need_to_fix=True) | Q(homeworks__isnull=True)
 
-    schedules = Schedule.objects.filter(schedule_query)
+    schedules = Schedule.objects.filter(schedule_query).order_by('date_of_lesson')
     lessons = list(schedules.values('id', 'lesson__title'))
 
     return lessons
@@ -90,6 +90,6 @@ def get_teacher_lessons(user: User, classroom_id):
     """Возвращает список словарей (id: Schedule, lesson__title) занятий преподавателя в выбранной группе"""
 
     classroom = Classroom.objects.get(id=classroom_id)
-    lessons = list(classroom.schedule.filter(teacher=user).values('id', 'lesson__title'))
+    lessons = list(classroom.schedule.filter(teacher=user).order_by('date_of_lesson').values('id', 'lesson__title'))
 
     return lessons
