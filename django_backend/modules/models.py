@@ -35,3 +35,7 @@ class Lesson(models.Model):
         verbose_name_plural = 'Уроки'
 
         ordering = ['module', 'order_number']
+
+        constraints = [
+            models.UniqueConstraint(fields=['module_id', 'order_number'], name='unique_module_order'),
+        ]
