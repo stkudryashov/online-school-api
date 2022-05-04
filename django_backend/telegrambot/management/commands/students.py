@@ -13,6 +13,8 @@ from classrooms.services import get_student_courses, get_student_lessons, send_s
 from telegram import Update
 from telegram import ParseMode
 
+from telegrambot import tasks
+
 
 HOMEWORK_URL = range(1)
 
@@ -22,6 +24,8 @@ def courses_list(update: Update.callback_query):
 
     user = User.objects.get(telegram_id=update.message.chat_id)
     user_courses = get_student_courses(user)
+
+    tasks.debug_task.delay()
 
     if not user_courses:
         update.message.reply_text('Ты еще на записан на курсы 😢')
