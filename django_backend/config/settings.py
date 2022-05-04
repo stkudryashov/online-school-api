@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(' ')
 
 
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
+    'django_celery_beat',
 
     'corsheaders',
 
@@ -147,6 +150,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'Europe/Moscow'
+CELERY_TIMEZONE = TIME_ZONE
 
 USE_I18N = True
 USE_L10N = True

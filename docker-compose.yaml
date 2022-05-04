@@ -27,6 +27,7 @@ services:
       - ./.env
     depends_on:
       - database
+    restart: always
 
   server:
     container_name: nginx
@@ -35,8 +36,7 @@ services:
       - static-volume:/home/app/backend/staticfiles
     ports:
       - '80:80'
-    depends_on:
-      - backend
+    restart: always
 
   telegram:
     container_name: telegram
@@ -46,8 +46,7 @@ services:
       - ./.env
     depends_on:
       - database
-      - backend
-      - server
+    restart: always
 
   redis:
     container_name: redis
@@ -62,7 +61,16 @@ services:
       - ./.env
     depends_on:
       - database
-      - backend
+      - redis
+
+  scheduler:
+    container_name: scheduler
+    build: ./django_backend
+    command: celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - ./.env
+    depends_on:
+      - database
       - redis
 
 volumes:

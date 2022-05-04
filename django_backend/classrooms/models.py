@@ -4,6 +4,10 @@ from accounts.models import User
 from courses.models import Course
 from modules.models import Lesson
 
+from django_celery_beat.models import PeriodicTask, ClockedSchedule
+
+from datetime import datetime, timedelta
+
 
 class Classroom(models.Model):
     """Модель учебной группы"""
@@ -63,8 +67,18 @@ class Schedule(models.Model):
     date_of_lesson = models.DateTimeField(blank=True, null=True, verbose_name='Дата проведения занятия')
 
     def save(self, *args, **kwargs):
-        # todo: Добавить в рассылку уведомления о занятии
         super(Schedule, self).save(*args, **kwargs)
+
+        clocked_schedule = ClockedSchedule.objects.create(
+            clocked_time=self.date_of_lesson - timedelta(hours=1)
+        )
+
+        PeriodicTask.objects.create(
+            name=f'Telegram Notification {self.id}',
+            task='telegram_notification_task',
+            clocked=clocked_schedule,
+            one_off=True
+        )
 
     def __str__(self):
         return f'{self.lesson.title} - {self.classroom.title}'

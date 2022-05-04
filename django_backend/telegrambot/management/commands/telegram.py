@@ -3,6 +3,8 @@ from django.core.management.base import BaseCommand
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
+from django.conf import settings
+
 from telegram import Update
 from telegram.ext import Updater, Filters, CallbackContext
 from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler
@@ -24,13 +26,9 @@ from telegrambot.management.commands.students import HOMEWORK_URL
 import logging
 import telegram
 
-import os
-
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-TOKEN = os.environ.get('TOKEN')
 
 START_LOGIN, USER_EMAIL = range(2)
 
@@ -212,7 +210,7 @@ def callbacks(update: Update, context: CallbackContext):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        updater = Updater(TOKEN)
+        updater = Updater(settings.TELEGRAM_TOKEN)
 
         dispatcher = updater.dispatcher
 
