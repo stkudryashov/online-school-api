@@ -75,8 +75,8 @@ class Schedule(models.Model):
             ClockedSchedule.objects.filter(periodictask__name=f'Telegram Notification {self.id}').delete()
 
         clocked_schedule = ClockedSchedule.objects.create(
-            clocked_time=self.date_of_lesson - timedelta(hours=1)
-        )
+            clocked_time=self.date_of_lesson - timedelta(hours=1) - timedelta(hours=3)  # Костыль для scheduler
+        )  # Из даты вычитаем нужный нам час до урока и еще минус три для синхронизации UTC
 
         PeriodicTask.objects.create(
             name=f'Telegram Notification {self.id}',
