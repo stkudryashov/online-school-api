@@ -62,6 +62,10 @@ class Schedule(models.Model):
 
     date_of_lesson = models.DateTimeField(blank=True, null=True, verbose_name='Дата проведения занятия')
 
+    def save(self, *args, **kwargs):
+        # todo: Добавить в рассылку уведомления о занятии
+        super(Schedule, self).save(*args, **kwargs)
+
     def __str__(self):
         return f'{self.lesson.title} - {self.classroom.title}'
 
