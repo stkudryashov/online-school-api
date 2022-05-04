@@ -46,11 +46,14 @@ services:
       - ./.env
     depends_on:
       - database
+      - backend
     restart: always
 
   redis:
     container_name: redis
     image: redis:7.0.0-alpine
+    volumes:
+      - redis-data:/data
     restart: always
 
   celery:
@@ -62,6 +65,7 @@ services:
     depends_on:
       - database
       - redis
+    restart: always
 
   scheduler:
     container_name: scheduler
@@ -72,7 +76,10 @@ services:
     depends_on:
       - database
       - redis
+      - backend
+    restart: always
 
 volumes:
   postgres-data:
+  redis-data:
   static-volume:

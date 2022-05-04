@@ -1,5 +1,4 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, ConversationHandler
 
 from accounts.models import User
 from classrooms.models import Schedule
@@ -47,10 +46,9 @@ def teacher_lessons(update: Update.callback_query, classroom_id):
 def lesson_info(update: Update.callback_query, classroom_id, schedule_id):
     """Отправляет преподавателю информацию о выбранном занятии"""
 
-    user = User.objects.get(telegram_id=update.message.chat_id)
     schedule = Schedule.objects.get(id=schedule_id)
 
-    title = schedule.lesson.title.replace('.', '\.')
+    title = schedule.lesson.title.replace('.', '\.').replace('-', '\-')
     date = dateformat.format(schedule.date_of_lesson, 'd E')
     time = dateformat.time_format(schedule.date_of_lesson, 'H:i')
 
@@ -59,7 +57,7 @@ def lesson_info(update: Update.callback_query, classroom_id, schedule_id):
     hw_accepted = schedule.homeworks.filter(is_accepted=True).count()
 
     message = f"*Урок:* _{title}_\n"\
-              f"*Дата урока:* _{date} {time}_\n\n"\
+              f"*Дата урока:* _{date} {time} МСК_\n\n"\
               f"*Отправили работы:* _{hw_waiting} / {hw_all}\n_"\
               f"*Получили зачет:* _{hw_accepted}_"
 

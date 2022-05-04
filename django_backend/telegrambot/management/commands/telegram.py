@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 from telegram import Update
-from telegram.ext import Updater, Filters, CallbackContext
+from telegram.ext import Updater, Filters, CallbackContext, Defaults
 from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, CallbackQueryHandler
 
 from accounts.models import User
@@ -25,6 +25,8 @@ from telegrambot.management.commands.students import HOMEWORK_URL
 
 import logging
 import telegram
+
+import pytz
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -210,7 +212,8 @@ def callbacks(update: Update, context: CallbackContext):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        updater = Updater(settings.TELEGRAM_TOKEN)
+        defaults = Defaults(tzinfo=pytz.timezone('Europe/Moscow'))
+        updater = Updater(settings.TELEGRAM_TOKEN, defaults=defaults)
 
         dispatcher = updater.dispatcher
 

@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from accounts.models import User
@@ -69,14 +71,18 @@ class Schedule(models.Model):
     def save(self, *args, **kwargs):
         super(Schedule, self).save(*args, **kwargs)
 
+        if ClockedSchedule.objects.filter(periodictask__name=f'Telegram Notification {self.id}').exists():
+            ClockedSchedule.objects.filter(periodictask__name=f'Telegram Notification {self.id}').delete()
+
         clocked_schedule = ClockedSchedule.objects.create(
-            clocked_time=self.date_of_lesson - timedelta(hours=1)
+            clocked_time=(self.date_of_lesson - timedelta(hours=1)).utcnow()
         )
 
         PeriodicTask.objects.create(
             name=f'Telegram Notification {self.id}',
             task='telegram_notification_task',
             clocked=clocked_schedule,
+            args=json.dumps([self.id]),
             one_off=True
         )
 
