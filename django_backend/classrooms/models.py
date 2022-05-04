@@ -75,7 +75,7 @@ class Schedule(models.Model):
             ClockedSchedule.objects.filter(periodictask__name=f'Telegram Notification {self.id}').delete()
 
         clocked_schedule = ClockedSchedule.objects.create(
-            clocked_time=(self.date_of_lesson - timedelta(hours=1)).utcnow()
+            clocked_time=self.date_of_lesson - timedelta(hours=1)
         )
 
         PeriodicTask.objects.create(
