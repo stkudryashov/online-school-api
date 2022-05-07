@@ -80,7 +80,7 @@ class Schedule(models.Model):
 
         PeriodicTask.objects.create(
             name=f'Telegram Notification {self.id}',
-            task='telegram_notification_task',
+            task='lessons_notification_task',
             clocked=clocked_schedule,
             args=json.dumps([self.id]),
             one_off=True
