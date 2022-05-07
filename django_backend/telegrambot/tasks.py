@@ -1,6 +1,7 @@
 from celery import shared_task
 
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.utils import dateformat
 
 from accounts.models import User
@@ -12,7 +13,7 @@ import telegram
 
 
 @shared_task(name='telegram_notification_task')
-def telegram_notification_task(schedule_id):
+def lessons_notification_task(schedule_id):
     schedule = Schedule.objects.get(id=schedule_id)
     bot = telegram.Bot(settings.TELEGRAM_TOKEN)
 
@@ -27,6 +28,21 @@ def telegram_notification_task(schedule_id):
             parse_mode=ParseMode.MARKDOWN_V2
         )
 
+    message = f'У группы {classroom} занятие {title} сегодня в {time} МСК 💌',
+
+    msg = EmailMultiAlternatives(
+        # title:
+        'Напоминание о занятии 💌',
+        # message:
+        message,
+        # from:
+        settings.EMAIL_HOST_USER,
+        # to:
+        [schedule.teacher.email]
+    )
+
+    msg.send()
+
     students = schedule.classroom.studentclassroom_set.all().values_list('student_id', flat=True).distinct()
 
     for student_id in students:
@@ -38,3 +54,18 @@ def telegram_notification_task(schedule_id):
                 text=f'У тебя занятие *{title}* сегодня в *{time} МСК* 💌',
                 parse_mode=ParseMode.MARKDOWN_V2
             )
+
+        message = f'У тебя занятие {title} сегодня в {time} МСК 💌',
+
+        msg = EmailMultiAlternatives(
+            # title:
+            'Напоминание о занятии 💌',
+            # message:
+            message,
+            # from:
+            settings.EMAIL_HOST_USER,
+            # to:
+            [user.email]
+        )
+
+        msg.send()
