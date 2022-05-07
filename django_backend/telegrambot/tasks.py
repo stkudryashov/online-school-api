@@ -28,7 +28,7 @@ def lessons_notification_task(schedule_id):
             parse_mode=ParseMode.MARKDOWN_V2
         )
 
-    message = f'У группы {classroom} занятие {title} сегодня в {time} МСК 💌',
+    message = f'У группы {classroom} занятие {title} сегодня в {time} МСК 💌'
 
     msg = EmailMultiAlternatives(
         # title:
@@ -55,7 +55,7 @@ def lessons_notification_task(schedule_id):
                 parse_mode=ParseMode.MARKDOWN_V2
             )
 
-        message = f'У тебя занятие {title} сегодня в {time} МСК 💌',
+        message = f'У тебя занятие {title} сегодня в {time} МСК 💌'
 
         msg = EmailMultiAlternatives(
             # title:
