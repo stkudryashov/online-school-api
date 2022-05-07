@@ -12,7 +12,7 @@ from telegram import ParseMode
 import telegram
 
 
-@shared_task(name='telegram_notification_task')
+@shared_task(name='lessons_notification_task')
 def lessons_notification_task(schedule_id):
     schedule = Schedule.objects.get(id=schedule_id)
     bot = telegram.Bot(settings.TELEGRAM_TOKEN)
