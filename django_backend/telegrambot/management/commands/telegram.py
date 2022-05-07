@@ -12,12 +12,12 @@ from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, Ca
 from accounts.models import User
 from telegrambot.models import BotAnswer
 
-from telegrambot.management.commands.services import get_user_keyboard, change_user_type
+from telegrambot.management.commands.services import get_user_keyboard, change_user_type, send_user_schedule
 
 from telegrambot.management.commands.keyboard import LOGIN_BUTTON
 
 from telegrambot.management.commands.students import courses_list, modules_list, lessons_list, lessons_view
-from telegrambot.management.commands.students import homeworks_list, homeworks_send, student_schedule
+from telegrambot.management.commands.students import homeworks_list, homeworks_send
 
 from telegrambot.management.commands.teachers import classrooms_list, teacher_lessons, lesson_info
 
@@ -116,6 +116,8 @@ def messages(update: Update, context: CallbackContext):
     if user.type == 'teacher':
         if message == 'Мои студенты 🧑🏼‍🎓':
             classrooms_list(update)
+        elif message == 'Мои занятия 📆':
+            send_user_schedule(update)
         else:
             update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
     else:
@@ -124,7 +126,7 @@ def messages(update: Update, context: CallbackContext):
         elif message == 'Сдать работу 🎒':
             homeworks_list(update)
         elif message == 'Ближайшие занятия 📔':
-            student_schedule(update)
+            send_user_schedule(update)
         else:
             update.message.reply_text(BotAnswer.objects.get(query='Не понимаю').text)
 

@@ -15,6 +15,6 @@ STUDENT_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
 
 
 TEACHER_MENU_KEYBOARD = ReplyKeyboardMarkup.from_column(
-    button_column=['Мои студенты 🧑🏼‍🎓', 'Уведомить студентов ☎️'],
+    button_column=['Мои студенты 🧑🏼‍🎓', 'Мои занятия 📆'],
     resize_keyboard=True,
 )

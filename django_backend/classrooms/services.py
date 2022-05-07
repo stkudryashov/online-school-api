@@ -62,10 +62,13 @@ def send_student_homework(user: User, schedule_id, task_url):
         return False
 
 
-def get_student_schedule(user: User, view_range=None):
-    """Возвращает список словарей (lesson__title, date_of_lesson) расписания студента"""
+def get_user_schedule(user: User, view_range=None):
+    """Возвращает список словарей (lesson__title, date_of_lesson, classroom__title) расписания пользователя"""
 
     schedule_query = Q(classroom__studentclassroom__student=user)
+
+    if user.type == 'teacher':
+        schedule_query = Q(teacher=user)
 
     if view_range:
         schedule_query &= Q(date_of_lesson__gte=datetime.now() - timedelta(hours=2))
@@ -73,7 +76,7 @@ def get_student_schedule(user: User, view_range=None):
 
     schedule = Schedule.objects.filter(
         schedule_query
-    ).order_by('date_of_lesson').values('lesson__title', 'date_of_lesson').distinct()
+    ).order_by('date_of_lesson').values('lesson__title', 'date_of_lesson', 'classroom__title').distinct()
 
     return schedule
 
